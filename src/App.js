@@ -1,53 +1,38 @@
 import './App.css';
 import Post from './Post';
+import React, { useEffect, useState } from "react";
+import { db } from './firebase';
+
 function App() {
 
-  //const [state, setstate] = useState([]);
+  const [posts, setPosts] = useState([]);
+
+  //Use Effect -> Runs code based on conditions
+
+  useEffect(() => {
+    //Code runs once when page is refreshed, on changes to a e.g post it doesnt run again
+    db.collection('posts').onSnapshot(snapshot => {
+    setPosts(snapshot.docs.map(doc => doc.data()));  //everytime new post is added, code runs
+    })
+  }, []);
+
 
   return (
     <div className="App">
       {/*Header*/}
       <div className="app_header">
-      <img className="app_headerImage" src="logo.jpg"
-      alt="logo"></img></div>
+        <img className="app_headerImage" src="logo.jpg"
+        alt="logo"></img>
+      </div>
     
       {/*post*/}
-      <Post
-      username="MarinkieJ"
-      caption=" Wisper Memoji"
-      imageurl="post (1).png"
-      profilepic="pp (1).jpg"/>
-      <Post
-      imageurl="post (2).png"
-      caption=" Coder all day Memoji"
-      username="MarinkieM"/>
-      <Post
-      imageurl="post (3).png"
-      caption=" Hello Memoji"
-      username="MarinkieK"
-      profilepic="pp (3).png"/>
-      
-      <Post
-      imageurl="post (4).png"
-      caption=" Hi Memoji"
-      username="Lethabo_b"/>
-      <Post
-      imageurl="post (5).png"
-      caption=" Call Me Memoji"
-      username="MarinkieR"
-      profilepic="pp (5).png"/>
-      
-      <Post
-      imageurl="post (6).png"
-      caption=" Sick Memoji"
-      username="MarinkieS"
-      profilepic="pp (6).png"/>
-      {/*post*/}
-      {/*post*/}
+      {
+        posts.map(({id,post })=> (
+          <Post key= {id} username={post.username} caption={post.caption} imageurl={post.imageurl}/>
+        ))
+      }
     </div>
   );
 }
 
 export default App;
-
-//timestamp 50:30
